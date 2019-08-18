@@ -7,16 +7,25 @@ import youtube from './api/youtube';
 
 class App extends React.Component {
   state = {
-    video: [],
+    videos: [],
     selectedVideo: null
   };
 
+  componentDidMount() {
+    this.handelSubmit('javascript');
+  }
+
   handelSubmit = async searchTerm => {
     const respone = await youtube(searchTerm);
-    this.setState({ video: respone.items, selectedVideo: respone.items[0] });
-    console.log(this.state.selectedVideo);
+    this.setState({ videos: respone.items, selectedVideo: respone.items[0] });
+    // console.log(this.state.selectedVideo);
+  };
+
+  onVideoSelect = video => {
+    this.setState({ selectedVideo: video });
   };
   render() {
+    const { selectedVideo, videos } = this.state;
     return (
       <Grid container justify="center" spacing={2}>
         <Grid item xs={12}>
@@ -27,11 +36,11 @@ class App extends React.Component {
             </Grid>
             <Grid item xs={8}>
               {/* Videio DETAILS */}
-              <VideoDetails video={this.state.selectedVideo} />
+              <VideoDetails video={selectedVideo} />
             </Grid>
             <Grid item xs={4}>
               {/* VEDIO LIST */}
-              <VideoList />
+              <VideoList videos={videos} onVideoSelect={this.onVideoSelect} />
             </Grid>
           </Grid>
         </Grid>
