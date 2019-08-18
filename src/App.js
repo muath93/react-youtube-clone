@@ -14,6 +14,7 @@ class App extends React.Component {
   handelSubmit = async searchTerm => {
     const respone = await youtube(searchTerm);
     this.setState({ video: respone.items, selectedVideo: respone.items[0] });
+    console.log(this.state.selectedVideo);
   };
   render() {
     return (
@@ -26,7 +27,7 @@ class App extends React.Component {
             </Grid>
             <Grid item xs={8}>
               {/* Videio DETAILS */}
-              <VideoDetails />
+              <VideoDetails video={this.state.selectedVideo} />
             </Grid>
             <Grid item xs={4}>
               {/* VEDIO LIST */}
