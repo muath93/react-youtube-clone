@@ -1,57 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Grid } from '@material-ui/core';
 
 import { SearchBar, VideoDetails, VideoList } from './components';
 import youtube from './api/youtube';
 
-class App extends React.Component {
-  state = {
-    videos: [],
-    selectedVideo: null
-  };
+const App = () => {
+  // state = {
+  //   videos: [],
+  //   selectedVideo: null
+  // };
 
-  componentDidMount() {
-    this.handelSubmit('javascript');
-  }
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
-  handelSubmit = async searchTerm => {
+  // componentDidMount() {
+  //   this.handelSubmit('javascript');
+  // }
+
+  useEffect(() => {
+    handelSubmit('javascript');
+  }, []);
+
+  const handelSubmit = async searchTerm => {
     const respone = await youtube(searchTerm);
-    this.setState({ videos: respone.items, selectedVideo: respone.items[0] });
+    setVideos(respone.items);
+    setSelectedVideo(respone.items[0]);
+    // this.setState({ videos: respone.items, selectedVideo: respone.items[0] });
     // console.log(this.state.selectedVideo);
   };
 
-  onVideoSelect = video => {
+  const onVideoSelect = video => {
+    setSelectedVideo(video);
     this.setState({ selectedVideo: video });
   };
-  render() {
-    const { selectedVideo, videos } = this.state;
-    return (
-      <Grid
-        container
-        justify="center"
-        spacing={2}
-        style={{ margin: 'auto', width: '99%' }}
-      >
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              {/* SEARCH BAR */}
-              <SearchBar onFormSubmit={this.handelSubmit} />
-            </Grid>
-            <Grid item xs={8}>
-              {/* Videio DETAILS */}
-              <VideoDetails video={selectedVideo} />
-            </Grid>
-            <Grid item xs={4}>
-              {/* VEDIO LIST */}
-              <VideoList videos={videos} onVideoSelect={this.onVideoSelect} />
-            </Grid>
+  // const { selectedVideo, videos } = this.state;
+  return (
+    <Grid
+      container
+      justify="center"
+      spacing={2}
+      style={{ margin: 'auto', width: '99%' }}
+    >
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            {/* SEARCH BAR */}
+            <SearchBar onFormSubmit={handelSubmit} />
+          </Grid>
+          <Grid item xs={8}>
+            {/* Videio DETAILS */}
+            <VideoDetails video={selectedVideo} />
+          </Grid>
+          <Grid item xs={4}>
+            {/* VEDIO LIST */}
+            <VideoList videos={videos} onVideoSelect={onVideoSelect} />
           </Grid>
         </Grid>
       </Grid>
-    );
-  }
-}
+    </Grid>
+  );
+};
 
 export default App;
